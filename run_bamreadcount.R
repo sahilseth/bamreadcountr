@@ -37,19 +37,23 @@
 #'
 #' @examples
 bam_readcount <- function(bam, 
+                          samplename,
                           bed,
+                          outfile,
+                          fa_fl = "~/ref/human/b37/fastas/Homo_sapiens_assembly19.fasta",
                           bamreadcount_exe = "bam-readcount"){
-  if(!is.data.frame(bed))
-    if(file.exists(bed))
-      bed = params::read_sheet(bed)
+  
   
   # bam-readcount [OPTIONS] <bam_file> [region]
-  cmd = sprintf("%s ", bamreadcount_exe, bam, bed)
+  cmd = glue("{bamreadcount_exe} -l {bed} -f {fa_fl} {bam} > {outfile}")
   
-  system(cmd)
+  #system(cmd)
+  flowmat = to_flowmat(list(bamreadcount = cmd), samplename = samplename)
+  
+  ret = list(flowmat = flowmat)
+  return(ret)
   
   
   
 }
-
 
